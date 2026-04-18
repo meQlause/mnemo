@@ -1,0 +1,61 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: rag_notes_frontend
+    ports:
+      - "8880:8880"
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - rag_network
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rag_notes_api
+    ports:
+      - "8881:8881"
+    env_file:
+      - ./backend/.env
+    environment:
+      POSTGRES_HOST: postgres
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - rag_network
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: rag_notes_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-raguser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ragpassword}
+      POSTGRES_DB: ${POSTGRES_DB:-ragdb}
+    ports:
+      - "8883:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-raguser} -d ${POSTGRES_DB:-ragdb}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - rag_network
+
+volumes:
+  postgres_data:
+
+networks:
+  rag_network:
+    driver: bridge
