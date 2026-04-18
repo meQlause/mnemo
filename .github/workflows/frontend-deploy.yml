@@ -12,7 +12,7 @@ env:
   CONTAINER_NAME: rag_notes_frontend
   PORT: 8880
   ENV_FILE: .env
-  REMOTE_DIR: /home/ardial/rag-notes-fe
+  REMOTE_DIR: /home/${{ secrets.REMOTE_USER }}/rag-notes-fe
 
 jobs:
   build-and-deploy:
