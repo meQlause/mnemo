@@ -32,7 +32,11 @@ Running **mnemo** locally is straightforward using Docker Compose. The configura
 
 ### Step 1: Clone & Configure
 
-1. Navigate to the root directory of the project.
+1. Clone the repository using the recursive flag to ensure any linked submodules are pulled correctly, then navigate into the project directory:
+   ```bash
+   git clone --recurse-submodules <your-repo-url>
+   cd <your-repo-directory>
+   ```
 2. Initialize your Environment Variables:
    Copy the example environment files for both the frontend and backend.
 
