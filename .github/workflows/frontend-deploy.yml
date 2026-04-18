@@ -82,7 +82,7 @@ jobs:
                 --name ${{ env.CONTAINER_NAME }} \
                 --restart unless-stopped \
                 --network rag_network \
-                -p 127.0.0.1:${{ env.PORT }}:${{ env.PORT }} \
+                -p 127.0.0.1:${{ env.PORT }}:80 \
                 --env-file ${{ env.REMOTE_DIR }}/${{ env.ENV_FILE }} \
                 ${{ env.DOCKER_IMAGE }}:latest
             '

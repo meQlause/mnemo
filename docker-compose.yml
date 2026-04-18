@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: rag_notes_frontend
     ports:
-      - "8880:8880"
+      - "8880:80"
     depends_on:
       - api
     restart: unless-stopped
@@ -41,9 +41,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-ragdb}
     ports:
       - "8883:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./backend/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-raguser} -d ${POSTGRES_DB:-ragdb}"]
       interval: 5s
